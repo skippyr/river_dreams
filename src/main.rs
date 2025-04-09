@@ -48,7 +48,7 @@ enum Command {
 }
 
 impl Command {
-    fn name(&self) -> &'static str {
+    const fn name(&self) -> &'static str {
         match self {
             Self::Init => "init",
             Self::Prompt => "prompt",
@@ -71,7 +71,7 @@ enum Color {
 }
 
 impl Color {
-    fn ansi(&self) -> u8 {
+    const fn ansi(&self) -> u8 {
         match self {
             Self::Red => 1,
             Self::Green => 2,
@@ -107,7 +107,7 @@ enum BatteryChargeStatus {
 }
 
 impl BatteryChargeStatus {
-    fn from(percentage: u8) -> Self {
+    const fn from(percentage: u8) -> Self {
         match percentage {
             0..5 => Self::Critical,
             5..30 => Self::Low,
@@ -326,7 +326,7 @@ fn draft_email() {
 }
 
 fn is_flag(argument: &str) -> bool {
-    return argument.starts_with("-") || argument.starts_with("--");
+    argument.starts_with("-") || argument.starts_with("--")
 }
 
 fn init_prompt() {
@@ -370,7 +370,7 @@ fn write_ip_section(ip: Option<&IpAddr>, sections_length: &mut u16) {
     *sections_length += ip.len() as u16;
 }
 
-fn calculate_number_length(mut number: u16) -> u16 {
+const fn calculate_number_length(mut number: u16) -> u16 {
     let mut length = if number == 0 { 1 } else { 0 };
     loop {
         if number == 0 {
@@ -711,7 +711,7 @@ fn write_left_prompt() {
     println!(" ");
 }
 
-fn is_dot_entry(entry: &dirent) -> bool {
+const fn is_dot_entry(entry: &dirent) -> bool {
     (entry.d_name[0] == b'.' as c_char && entry.d_name[1] == 0)
         || (entry.d_name[0] == b'.' as c_char
             && entry.d_name[1] == b'.' as c_char
@@ -746,7 +746,7 @@ fn is_hidden_entry(entry: &dirent) -> Result<bool, ()> {
     }
 }
 
-fn entry_type(entry: &dirent) -> EntryType {
+const fn entry_type(entry: &dirent) -> EntryType {
     match entry.d_type {
         DT_DIR => EntryType::Directory,
         DT_SOCK => EntryType::Socket,
