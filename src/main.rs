@@ -24,6 +24,10 @@ use std::{
     process::exit as exit_process,
 };
 
+#[cfg(target_os = "macos")]
+const OS: &str = "macOS";
+#[cfg(target_os = "linux")]
+const OS: &str = "Linux";
 const NAME: &str = env!("CARGO_PKG_NAME");
 const VERSION: &str = concat!("v", env!("CARGO_PKG_VERSION"));
 const REPOSITORY: &str = env!("CARGO_PKG_HOMEPAGE");
@@ -297,7 +301,7 @@ fn write_prompt_help() {
 }
 
 fn write_version() {
-    println!( "{} {VERSION}", NAME.dark_magenta().bold());
+    println!("{} {VERSION} ({OS})", NAME.dark_magenta().bold());
     println!("Available at: {}.", REPOSITORY.dark_cyan().underlined());
     println!();
     println!("Licensed under the {LICENSE_NAME}.");
@@ -385,8 +389,8 @@ fn disk_usage() -> DiskUsage {
     }
     let total_bytes = info.f_frsize * info.f_blocks as u64;
     let available_bytes = info.f_frsize * info.f_bavail as u64;
-    let free_bytes = total_bytes - available_bytes;
-    let percentage = (free_bytes as f64 / total_bytes as f64 * 100.0) as u8;
+    let used_bytes = total_bytes - available_bytes;
+    let percentage = (used_bytes as f64 / total_bytes as f64 * 100.0) as u8;
     DiskUsage {
         percentage,
         status: DiskUsageStatus::from(percentage),
