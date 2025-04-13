@@ -180,9 +180,7 @@ struct DirectoryReport {
     total_temporaries: usize,
 }
 
-fn throw_error<T>(message: T) -> !
-where
-    T: Into<String>,
+fn throw_error<T: Into<String>>(message: T) -> !
 {
     eprintln!(
         "{}{}{} {} {}{} {}",
@@ -348,13 +346,16 @@ fn total_columns() -> u16 {
 }
 
 fn write_top_separator(total_columns: u16) {
+    let mut is_to_use_red = false;
     for column in 0..total_columns {
         print!(
             "{}",
             if column % 2 == 0 {
-                color_symbol("≥", Color::Yellow)
+                let color = if is_to_use_red { Color::Red } else { Color::Yellow };
+                is_to_use_red = !is_to_use_red;
+                color_symbol("≥", color)
             } else {
-                color_symbol("v", Color::Red)
+                color_symbol("v", Color::Blue)
             }
         );
     }
