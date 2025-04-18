@@ -13,7 +13,7 @@
 </p>
 
 ## ❡ About
-A tribal looking ZSH shell theme to help you craft your most ambitious software projects. It is available for macOS and Linux.
+A tribal looking ZSH shell theme made to help you craft your most ambitious software projects. It is available for macOS and Linux.
 <figure align="center">
   <img alt="" src="https://raw.githubusercontent.com/skippyr/river_dreams/refs/heads/master/assets/preview.png" width="1020" />
 </figure>
