@@ -14,10 +14,37 @@
 
 ## ❡ About
 A tribal looking ZSH shell theme made to help you craft your most ambitious software projects. It is available for macOS and Linux.
-<figure align="center">
+<p align="center">
   <img alt="" src="https://raw.githubusercontent.com/skippyr/river_dreams/refs/heads/master/assets/preview.png" width="1020" />
-</figure>
+</p>
 <p align="center"><strong>Caption:</strong> a preview of the River Dreams theme with the <a href="https://github.com/skippyr/flamerial">Flamerial</a> palette.</p>
+
+## ❡ Features
+The left prompt shows:
+- Your local IP address.
+- Your disk usage and its status.
+- Your battery charge and its status, if available.
+- A calendar showing the weekday, month and day of month.
+- A 24-hours clock showing the hours and minutes.
+- A decorator when you are the root user.
+- The exit code of the last command.
+- The active Python virtual environment, if one has been sourced.
+- The current directory path, abbreviated inside of Git repositories.
+- The active Git branch, when inside of Git repositories.
+- A decorator when you do not have permissions in the current directory.
+
+The right prompt shows:
+- A report of the total number of each entry type in the current directory:
+  - Directories.
+  - Files.
+  - Sockets.
+  - Fifos.
+  - Block Devices.
+  - Character Devices.
+  - Symbolic Links *(they are not followed)*.
+  - Hidden Entries.
+  - Temporary Entries.
+- The total number of jobs running in the background.
 
 ## ❡ Install
 ### Dependencies
