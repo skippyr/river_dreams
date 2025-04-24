@@ -1,15 +1,15 @@
-use battery::{units::ratio::ratio, Manager as BatteryManager, State as BatteryState};
+use battery::{Manager as BatteryManager, State as BatteryState, units::ratio::ratio};
 use chrono::{DateTime, Datelike, Local as LocalTime, Timelike};
 use crossterm::{style::Stylize, terminal::size as terminal_size};
 use git2::{
     Repository as Git2Repository, RepositoryState as Git2RepositoryState, Status as Git2Status,
 };
 use libc::{
-    access, closedir, dirent, opendir, readdir, statvfs, strlen, DT_BLK, DT_CHR, DT_DIR, DT_FIFO,
-    DT_LNK, DT_SOCK, W_OK,
+    DT_BLK, DT_CHR, DT_DIR, DT_FIFO, DT_LNK, DT_SOCK, W_OK, access, closedir, dirent, opendir,
+    readdir, statvfs, strlen,
 };
 #[cfg(target_os = "macos")]
-use libc::{lstat, stat, UF_HIDDEN};
+use libc::{UF_HIDDEN, lstat, stat};
 use local_ip_address::local_ip as ip_address;
 use num_format::{Locale, ToFormattedString};
 use open::that as open_at_workspace;
@@ -42,13 +42,14 @@ const ZSH_EXIT_CODE: &str = "%?";
 const ZSH_TOTAL_JOBS: &str = "%j";
 const GIT_DEFAULT_BRANCH_NAME: &str = "master";
 
+#[derive(Debug, Clone, Copy, PartialEq)]
 enum Command {
     Init,
     Prompt,
 }
 
 impl Command {
-    fn name(&self) -> &'static str {
+    const fn name(&self) -> &'static str {
         match self {
             Self::Init => "init",
             Self::Prompt => "prompt",
@@ -56,11 +57,13 @@ impl Command {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
 enum PromptSide {
     Left,
     Right,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
 enum Color {
     Red,
     Green,
@@ -71,7 +74,7 @@ enum Color {
 }
 
 impl Color {
-    fn ansi(&self) -> u8 {
+    const fn ansi(&self) -> u8 {
         match self {
             Self::Red => 1,
             Self::Green => 2,
@@ -83,6 +86,7 @@ impl Color {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
 enum DiskUsageStatus {
     Low,
     Moderate,
@@ -99,6 +103,7 @@ impl From<u8> for DiskUsageStatus {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
 enum BatteryChargeStatus {
     Critical,
     Low,
@@ -106,7 +111,7 @@ enum BatteryChargeStatus {
     High,
 }
 
-impl BatteryChargeStatus {
+impl From<u8> for BatteryChargeStatus {
     fn from(percentage: u8) -> Self {
         match percentage {
             0..5 => Self::Critical,
@@ -117,6 +122,7 @@ impl BatteryChargeStatus {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
 enum DayFraction {
     Dawn,
     Morning,
@@ -135,11 +141,13 @@ impl From<&DateTime<LocalTime>> for DayFraction {
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
 enum GitReference {
     Branch(String),
     RebaseHash(String),
 }
 
+#[derive(Debug, Clone, Copy, PartialEq)]
 enum EntryType {
     File,
     Directory,
@@ -150,24 +158,27 @@ enum EntryType {
     Symlink,
 }
 
+#[derive(Debug, Clone, PartialEq)]
 struct DiskUsage {
     percentage: u8,
     status: DiskUsageStatus,
 }
 
+#[derive(Debug, Clone, PartialEq)]
 struct BatteryCharge {
     percentage: u8,
     status: BatteryChargeStatus,
     is_charging: bool,
 }
 
+#[derive(Debug, Clone, PartialEq)]
 struct GitRepository {
     path: PathBuf,
     reference: GitReference,
     is_dirty: bool,
 }
 
-#[derive(Default)]
+#[derive(Debug, Clone, PartialEq, Default)]
 struct DirectoryReport {
     total_files: usize,
     total_directories: usize,
@@ -180,8 +191,13 @@ struct DirectoryReport {
     total_temporaries: usize,
 }
 
-fn throw_error<T: Into<String>>(message: T) -> !
-{
+macro_rules! throw_error {
+    ($format:literal $(, $arguments:expr)*) => {
+        throw_error(format!($format $(, $arguments)*))
+    };
+}
+
+fn throw_error<T: AsRef<str>>(message: T) -> ! {
     eprintln!(
         "{}{}{} {} {}{} {}",
         ":".dark_yellow().bold(),
@@ -190,7 +206,7 @@ fn throw_error<T: Into<String>>(message: T) -> !
         NAME.dark_magenta().bold(),
         "(exit 1)".dark_yellow().bold(),
         ":".dark_magenta().bold(),
-        message.into()
+        message.as_ref()
     );
     eprintln!(
         "{} use {} or {} for help instructions.",
@@ -310,15 +326,15 @@ fn write_version() {
 }
 
 fn open_repository() {
-    if let Err(_) = open_at_workspace(REPOSITORY) {
-        throw_error("can not open the default web browser.");
+    if open_at_workspace(REPOSITORY).is_err() {
+        throw_error!("can not open the default web browser.");
     }
     println!("Opening the repository in the default web browser.");
 }
 
 fn draft_email() {
-    if let Err(_) = open_at_workspace(format!("mailto:{AUTHOR_EMAIL}")) {
-        throw_error("can not open the default mail client.");
+    if open_at_workspace(format!("mailto:{AUTHOR_EMAIL}")).is_err() {
+        throw_error!("can not open the default mail client.");
     }
     println!("Drafting an e-mail in the default e-mail client.");
 }
@@ -334,28 +350,25 @@ fn init_prompt() {
     println!("RPROMPT='$(river_dreams prompt right)';");
 }
 
-fn color_symbol(symbol: &str, color: Color) -> String {
-    format!("%F{{{}}}{symbol}%f", color.ansi())
+fn color_symbol<T: AsRef<str>>(symbol: T, color: Color) -> String {
+    format!("%F{{{}}}{}%f", color.ansi(), symbol.as_ref())
 }
 
 fn total_columns() -> u16 {
     match terminal_size().map(|(total_columns, _)| total_columns) {
         Ok(total_columns) => total_columns,
-        Err(_) => throw_error("can not retrieve the terminal dimensions."),
+        Err(_) => throw_error!("can not retrieve the terminal dimensions."),
     }
 }
 
 fn write_top_separator(total_columns: u16) {
-    let mut is_to_use_red = false;
     for column in 0..total_columns {
         print!(
             "{}",
             if column % 2 == 0 {
-                let color = if is_to_use_red { Color::Red } else { Color::Yellow };
-                is_to_use_red = !is_to_use_red;
-                color_symbol("≥", color)
+                color_symbol("≥", Color::Yellow)
             } else {
-                color_symbol("v", Color::Blue)
+                color_symbol("v", Color::Red)
             }
         );
     }
@@ -371,7 +384,7 @@ fn write_ip_section(ip: Option<&IpAddr>, sections_length: &mut u16) {
     *sections_length += ip.len() as u16;
 }
 
-fn calculate_number_length(mut number: u16) -> u16 {
+const fn calculate_number_length(mut number: u16) -> u16 {
     let mut length = if number == 0 { 1 } else { 0 };
     loop {
         if number == 0 {
@@ -386,7 +399,7 @@ fn calculate_number_length(mut number: u16) -> u16 {
 fn disk_usage() -> DiskUsage {
     let mut info = unsafe { std::mem::zeroed() };
     if unsafe { statvfs([b'/' as c_char, 0].as_ptr(), &mut info) } < 0 {
-        throw_error("can not retrieve the disk information.");
+        throw_error!("can not retrieve the disk information.");
     }
     let total_bytes = info.f_frsize * info.f_blocks as u64;
     let available_bytes = info.f_frsize * info.f_bavail as u64;
@@ -419,11 +432,11 @@ fn battery_charge() -> Option<BatteryCharge> {
     const SUPPLY_ERROR: &str = "can not retrieve info about the energy supply of the computer.";
     let manager = match BatteryManager::new() {
         Ok(manager) => manager,
-        Err(_) => throw_error(SUPPLY_ERROR),
+        Err(_) => throw_error!("{SUPPLY_ERROR}"),
     };
     for battery in match manager.batteries() {
         Ok(batteries) => batteries,
-        Err(_) => throw_error(SUPPLY_ERROR),
+        Err(_) => throw_error!("{SUPPLY_ERROR}"),
     } {
         let battery = match battery {
             Ok(battery) => battery,
@@ -517,14 +530,14 @@ fn write_middle_separator(total_columns: u16, sections_length: u16) {
     }
 }
 
-fn show_when_root(symbol: &str) -> String {
-    format!("%(#.{symbol}.)")
+fn show_when_root<T: AsRef<str>>(symbol: T) -> String {
+    format!("%(#.{}.)", symbol.as_ref())
 }
 
 fn write_root_section() {
     print!(
         "{}",
-        show_when_root(&format!(
+        show_when_root(format!(
             "{}{}{}",
             color_symbol("{", Color::Yellow),
             color_symbol("#", Color::Red),
@@ -533,8 +546,8 @@ fn write_root_section() {
     );
 }
 
-fn show_in_exit_codes(success_symbol: &str, error_symbol: &str) -> String {
-    format!("%(?.{success_symbol}.{error_symbol})")
+fn show_in_exit_codes<T: AsRef<str>, W: AsRef<str>>(success_symbol: T, error_symbol: W) -> String {
+    format!("%(?.{}.{})", success_symbol.as_ref(), error_symbol.as_ref())
 }
 
 fn write_exit_code_section() {
@@ -542,15 +555,15 @@ fn write_exit_code_section() {
         "{}{}{}",
         color_symbol("{", Color::Yellow),
         show_in_exit_codes(
-            &color_symbol(ZSH_EXIT_CODE, Color::Yellow),
-            &color_symbol(ZSH_EXIT_CODE, Color::Red)
+            color_symbol(ZSH_EXIT_CODE, Color::Yellow),
+            color_symbol(ZSH_EXIT_CODE, Color::Red)
         ),
         color_symbol("}⤐ ", Color::Yellow)
     );
 }
 
 fn write_virtual_env_section() {
-    if let Some(virtual_env) = environment_variable("VIRTUAL_ENV").ok() {
+    if let Ok(virtual_env) = environment_variable("VIRTUAL_ENV") {
         print!(
             " ({})",
             Path::new(&virtual_env)
@@ -567,7 +580,7 @@ fn current_directory() -> PathBuf {
     } else if let Ok(pwd) = environment_variable("PWD") {
         return PathBuf::from(pwd);
     }
-    throw_error("can not resolve the current directory.");
+    throw_error!("can not resolve the current directory.");
 }
 
 fn git_repository() -> Option<GitRepository> {
@@ -631,19 +644,20 @@ fn git_repository() -> Option<GitRepository> {
     })
 }
 
-fn is_file_system_root(path: &Path) -> bool {
-    path.ancestors().count() == 1
+fn is_file_system_root<T: AsRef<Path>>(path: T) -> bool {
+    path.as_ref().ancestors().count() == 1
 }
 
-fn write_path_section(current_directory: &Path, repository: Option<&GitRepository>) {
+fn write_path_section<T: AsRef<Path>>(current_directory: T, repository: Option<&GitRepository>) {
     print!(" ");
     if repository.is_some() && !is_file_system_root(&repository.unwrap().path) {
         print!(
             "{}",
             color_symbol(
-                &format!(
+                format!(
                     "@/{}",
                     current_directory
+                        .as_ref()
                         .strip_prefix(repository.unwrap().path.parent().unwrap())
                         .unwrap()
                         .display()
@@ -712,7 +726,7 @@ fn write_left_prompt() {
     println!(" ");
 }
 
-fn is_dot_entry(entry: &dirent) -> bool {
+const fn is_dot_entry(entry: &dirent) -> bool {
     (entry.d_name[0] == b'.' as c_char && entry.d_name[1] == 0)
         || (entry.d_name[0] == b'.' as c_char
             && entry.d_name[1] == b'.' as c_char
@@ -747,7 +761,7 @@ fn is_hidden_entry(entry: &dirent) -> Result<bool, ()> {
     }
 }
 
-fn entry_type(entry: &dirent) -> EntryType {
+const fn entry_type(entry: &dirent) -> EntryType {
     match entry.d_type {
         DT_DIR => EntryType::Directory,
         DT_SOCK => EntryType::Socket,
@@ -800,14 +814,14 @@ fn directory_report() -> DirectoryReport {
     report
 }
 
-fn write_directory_report_field(total: usize, symbol: &str, color: Option<Color>) {
+fn write_directory_report_field<T: AsRef<str>>(total: usize, symbol: T, color: Option<Color>) {
     if total > 0 {
         print!(
             " {}{}",
             if color.is_none() {
-                String::from(symbol)
+                String::from(symbol.as_ref())
             } else {
-                color_symbol(symbol, color.unwrap())
+                color_symbol(symbol.as_ref(), color.unwrap())
             },
             total.to_formatted_string(&Locale::en)
         );
@@ -826,17 +840,16 @@ fn write_directory_entries_section(report: &DirectoryReport) {
     write_directory_report_field(report.total_temporaries, "󱣹 ", Some(Color::Magenta));
 }
 
-fn show_when_job(symbol: &str) -> String {
-    format!("%(1j.{symbol}.)")
+fn show_when_job<T: AsRef<str>>(symbol: T) -> String {
+    format!("%(1j.{}.)", symbol.as_ref())
 }
 
 fn write_jobs_section() {
     print!(
         "{}",
-        show_when_job(&format!(
-            " {} {}",
-            color_symbol("", Color::Magenta),
-            ZSH_TOTAL_JOBS
+        show_when_job(format!(
+            " {} {ZSH_TOTAL_JOBS}",
+            color_symbol("", Color::Magenta)
         ))
     );
 }
@@ -857,10 +870,7 @@ fn main() {
         } else if command_argument == "prompt" {
             active_command = Some(Command::Prompt)
         } else if !is_flag(command_argument) {
-            throw_error(format!(
-                "invalid command \"{}\" provided.",
-                command_argument
-            ));
+            throw_error!(r#"invalid command "{command_argument}" provided."#);
         }
     }
     for argument in &arguments {
@@ -889,30 +899,26 @@ fn main() {
         }
         if is_flag(argument) {
             if let Some(active_command) = active_command {
-                throw_error(format!(
-                    "invalid flag \"{}\" provided for \"{}\" command.",
-                    argument,
+                throw_error!(
+                    r#"invalid flag "{argument}" provided for "{}" command."#,
                     active_command.name()
-                ));
+                );
             } else {
-                throw_error(format!("invalid flag \"{}\" provided.", argument));
+                throw_error!(r#"invalid flag "{argument}" provided."#);
             }
         }
     }
     match active_command {
-        None => throw_error("no command provided."),
+        None => throw_error!("no command provided."),
         Some(Command::Init) => init_prompt(),
         Some(Command::Prompt) => {
             let mut prompt_side = PromptSide::Left;
             if arguments.len() == 1 {
-                throw_error("no prompt side provided.");
+                throw_error!("no prompt side provided.");
             } else if arguments[1] == "right" {
                 prompt_side = PromptSide::Right;
             } else if arguments[1] != "left" {
-                throw_error(format!(
-                    "invalid prompt side \"{}\" provided.",
-                    arguments[1]
-                ));
+                throw_error!(r#"invalid prompt side "{}" provided."#, arguments[1]);
             }
             match prompt_side {
                 PromptSide::Left => write_left_prompt(),
