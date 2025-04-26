@@ -24,6 +24,12 @@ use std::{
     process::exit as exit_process,
 };
 
+macro_rules! throw_error {
+    ($format:literal $(, $arguments:expr)*) => {
+        throw_error(format!($format $(, $arguments)*))
+    };
+}
+
 #[cfg(target_os = "macos")]
 const OS: &str = "macOS";
 #[cfg(target_os = "linux")]
@@ -158,13 +164,13 @@ enum EntryType {
     Symlink,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 struct DiskUsage {
     percentage: u8,
     status: DiskUsageStatus,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 struct BatteryCharge {
     percentage: u8,
     status: BatteryChargeStatus,
@@ -178,7 +184,7 @@ struct GitRepository {
     is_dirty: bool,
 }
 
-#[derive(Debug, Clone, PartialEq, Default)]
+#[derive(Debug, Default, Clone, Copy, PartialEq)]
 struct DirectoryReport {
     total_files: usize,
     total_directories: usize,
@@ -189,12 +195,6 @@ struct DirectoryReport {
     total_symlinks: usize,
     total_hiddens: usize,
     total_temporaries: usize,
-}
-
-macro_rules! throw_error {
-    ($format:literal $(, $arguments:expr)*) => {
-        throw_error(format!($format $(, $arguments)*))
-    };
 }
 
 fn throw_error<T: AsRef<str>>(message: T) -> ! {
