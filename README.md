@@ -18,44 +18,59 @@ A tribal looking ZSH shell theme made to help you craft your most ambitious soft
 <p align="center">
   <img alt="" src="https://raw.githubusercontent.com/skippyr/river_dreams/refs/heads/master/assets/preview.png" width="1020" />
 </p>
-<p align="center"><strong>Caption:</strong> a preview of the River Dreams theme with the <a href="https://github.com/skippyr/flamerial">Flamerial</a> palette.</p>
+<p align="center"><strong>Caption:</strong> a preview of the River Dreams theme running in <a href="https://github.com/kovidgoyal/kitty">Kitty</a> on macOS. The palette used is <a href="https://github.com/skippyr/flamerial">Flamerial</a>, font is <a href="https://www.monolisa.dev">Monolisa</a> (with fallback to <a href="https://github.com/ryanoasis/nerd-fonts">Symbols Nerd Font</a>) and demo software is <a href="https://github.com/eza-community/eza">eza</a>. Custom background is not provided with the theme.</p>
 
 ## ❡ Features
 The left prompt shows:
-- Your local IP address.
-- Your disk usage and its status.
-- Your battery charge and its status, if available.
-- A calendar showing the weekday, month and day of month.
-- A 24-hours clock showing the hours and minutes.
-- A decorator when you are the root user.
-- The exit code of the last command.
-- The active Python virtual environment, if one has been sourced.
-- The current directory path, abbreviated inside of Git repositories.
-- The active Git branch, when inside of Git repositories.
-- A decorator when you do not have permissions in the current directory.
+<details>
+  <summary>Click to expand (...)</summary>
+  <ul>
+    <li>Your local IP address.</li>
+    <li>Your disk usage and its status.</li>
+    <li>Your battery charge and its status, if available.</li>
+    <li>A calendar showing the weekday, month and day of month.</li>
+    <li>A 24-hours clock showing the hours and minutes.</li>
+    <li>A decorator when you are the root user.</li>
+    <li>The exit code of the last command.</li>
+    <li>The active Python virtual environment, if one has been sourced.</li>
+    <li>The current directory path, abbreviated inside of Git repositories.</li>
+    <li>The active Git branch, when inside of Git repositories.</li>
+    <li>A decorator when you do not have permissions in the current directory.</li>
+  </ul>
+</details>
 
 The right prompt shows:
-- A report of the total number of each entry type in the current directory:
-  - Directories.
-  - Files.
-  - Sockets.
-  - Fifos.
-  - Block Devices.
-  - Character Devices.
-  - Symbolic Links *(they are not followed)*.
-  - Hidden Entries.
-  - Temporary Entries.
-- The total number of jobs running in the background.
+
+<details>
+  <summary>Click to expand (...)</summary>
+  <ul>
+    <li>
+      The total number of each entry type in the current directory:
+      <ul>
+        <li>Files.</li>
+        <li>Directories.</li>
+        <li>Sockets.</li>
+        <li>Fifos.</li>
+        <li>Block devices.</li>
+        <li>Character devices.</li>
+        <li>Symlinks <em>(they are not followed)</em>.</li>
+        <li>Hidden entries.</li>
+        <li>Temporary entries.</li>
+      </ul>
+    </li>
+    <li>The total number of jobs running in the background.</li>
+  </ul>
+</details>
 
 ## ❡ Install
 ### Dependencies
 The following dependencies must be installed before it:
-- [**Rust Toolchain**](https://www.rust-lang.org): it will be used to build the project.
-- **A font patched by the [Nerd Fonts project](https://www.nerdfonts.com/font-downloads):** it provides the pretty symbols used by the software.
+- [**ZSH**](https://www.rust-lang.org): this is the shell the theme runs on. If you are on macOS, this is already the default one. On Linux, only a few distributions come with it by default, if that is not your case, you would need to change it manually.
+- [**Rust Toolchain**](https://www.rust-lang.org): it will be used to build the project from source.
+- **A font patched by the [Nerd Fonts project](https://www.nerdfonts.com/font-downloads):** it provides the pretty symbols used by the software. Alternatively, you can use the font containing just its symbols as a fallback to an unpatched one if your terminal supports. Avoid having multiple ones installed due to possible font conflicts.
+- **A terminal with good unicode support:** it will be used to run the shell. It is highly recommended to use [**Kitty**](https://github.com/kovidgoyal/kitty) due to its amazing features and traits required to render the fonts used in the theme.
 
 Use your OS package manager or [HomeBrew](https://brew.sh) to install these packages.
-
-It is also recommended to use a terminal with great Unicode support avoid installing multiple Nerd Fonts for the symbols used in the theme to appear correctly. The terminal recommended is [**Kitty**](https://github.com/kovidgoyal/kitty). You can download it by following the previous tip.
 
 ### Procedures
 - Apply the Nerd Font installed in your terminal.
@@ -78,6 +93,9 @@ If you need help related to this project, open a new issue in its [issues pages]
 
 ## ❡ Contributing
 This project is open to review and possibly accept contributions in the form of bug reports and suggestions. If you are interested, send your contribution to its [pull requests page](https://github.com/skippyr/river_dreams/pulls) or via [e-mail](mailto:skippyr.developer@icloud.com).
+
+## ❡ Special Thanks
+Huge thanks to [unixorn](https://github.com/unixorn) who has seen potential in this software and considered it an awesome plugin. If you want to see other amazing creations made by other developers, not just including themes, remember to check out its [Awesome ZSH Plugins repository](https://github.com/unixorn/awesome-zsh-plugins).
 
 ## ❡ License
 This is free software licensed under the BSD-3-Clause License that comes WITH NO WARRANTY. Refer to the `LICENSE` file that comes in its source code for license and copyright details.
