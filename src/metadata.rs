@@ -1,7 +1,9 @@
-use crate::command_line::stdout_write;
+use std::io;
+
 use anyhow::{Result, anyhow};
 use crossterm::style::Stylize as _;
-use std::io;
+
+use crate::command_line::stdout_write;
 
 pub(crate) static APP_METADATA: AppMetadata = AppMetadata {
     name: env!("CARGO_PKG_NAME"),

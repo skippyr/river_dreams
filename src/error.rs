@@ -1,7 +1,9 @@
-use crate::metadata;
+use std::io::{self, Write as _};
+
 use anyhow::Error;
 use crossterm::style::Stylize as _;
-use std::io::{self, Write as _};
+
+use crate::metadata;
 
 pub(crate) fn write(error: Error) {
     let mut stderr = io::stderr().lock();

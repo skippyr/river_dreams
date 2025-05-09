@@ -1,8 +1,11 @@
 pub(crate) mod entry;
 
-use self::entry::UnixMetadata as _;
+use std::env;
+use std::path::PathBuf;
+
 use anyhow::{Result, anyhow};
-use std::{env, path::PathBuf};
+
+use self::entry::UnixMetadata as _;
 
 pub(crate) fn current() -> Result<PathBuf> {
     env::current_dir().or_else(|_| {

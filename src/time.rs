@@ -50,9 +50,6 @@ where
     }
 }
 
-fn is_ordinal<T>(time: &DateTime<T>, ordinal: Ordinal) -> bool
-where
-    T: TimeZone,
-{
+fn is_ordinal(time: &DateTime<impl TimeZone>, ordinal: Ordinal) -> bool {
     (time.day() - ordinal as u32) % 10 == 0
 }

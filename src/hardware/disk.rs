@@ -1,6 +1,7 @@
+use std::mem;
+
 use anyhow::{Result, bail};
 use libc::{c_char, c_ulong};
-use std::mem;
 
 pub(crate) type UsagePercentage = u8;
 

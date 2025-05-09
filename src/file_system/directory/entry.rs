@@ -1,6 +1,7 @@
-use libc::c_char;
 #[cfg(target_os = "macos")]
 use std::mem;
+
+use libc::c_char;
 
 pub(crate) type TypeCount = usize;
 

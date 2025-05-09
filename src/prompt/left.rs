@@ -1,20 +1,19 @@
-use crate::{
-    command_line::stdout_write,
-    file_system::{directory, path::PathResolutions as _},
-    format, git,
-    hardware::{battery, disk},
-    prompt::{self, Color, ZSH_EXIT_CODE, ZSH_PERCENTAGE_SYMBOL},
-    time::{DateTimeResolutions as _, DayFraction},
-};
+use std::env;
+use std::io::{self, StdoutLock};
+use std::net::IpAddr;
+use std::path::Path;
+
 use anyhow::{Result, anyhow};
 use chrono::{DateTime, Local};
 use crossterm::terminal;
-use std::{
-    env,
-    io::{self, StdoutLock},
-    net::IpAddr,
-    path::Path,
-};
+
+use crate::command_line::stdout_write;
+use crate::file_system::directory;
+use crate::file_system::path::PathResolutions as _;
+use crate::hardware::{battery, disk};
+use crate::prompt::{self, Color, ZSH_EXIT_CODE, ZSH_PERCENTAGE_SYMBOL};
+use crate::time::{DateTimeResolutions as _, DayFraction};
+use crate::{format, git};
 
 const SECTIONS_CONSTANT_LENGTH: prompt::Size = 42;
 
@@ -183,14 +182,11 @@ fn write_virtual_env_section(stdout: &mut StdoutLock) -> Result<()> {
     )
 }
 
-fn write_path_section<T>(
+fn write_path_section(
     stdout: &mut StdoutLock,
-    current_directory: T,
+    current_directory: impl AsRef<Path>,
     repository: Option<&git::Repository>,
-) -> Result<()>
-where
-    T: AsRef<Path>,
-{
+) -> Result<()> {
     stdout_write!(stdout, " ")?;
     let repository = match repository {
         Some(repository) if !repository.path.is_root() => repository,

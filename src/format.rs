@@ -1,6 +1,8 @@
+use std::any;
+use std::fmt::Display;
+
 use anyhow::{Result, anyhow};
 use num_traits::{PrimInt, Unsigned};
-use std::{any, fmt::Display};
 
 pub(crate) fn number_length<T>(mut number: T) -> Result<usize>
 where

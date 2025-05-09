@@ -12,9 +12,12 @@ pub(crate) mod metadata;
 pub(crate) mod prompt;
 pub(crate) mod time;
 
-use crate::command_line::{ArgumentParsing as _, Command};
+use std::env;
+use std::process::ExitCode;
+
 use anyhow::anyhow;
-use std::{env, process::ExitCode};
+
+use crate::command_line::{ArgumentParsing as _, Command};
 
 fn main() -> ExitCode {
     let arguments = env::args().skip(1).collect::<Vec<_>>();

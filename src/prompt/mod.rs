@@ -1,6 +1,8 @@
-use crate::command_line::stdout_write;
-use anyhow::Result;
 use std::io;
+
+use anyhow::Result;
+
+use crate::command_line::stdout_write;
 
 pub(crate) mod left;
 pub(crate) mod right;
@@ -45,25 +47,18 @@ RPROMPT='$(river_dreams prompt right)';"
     )
 }
 
-fn color_symbol<T>(symbol: T, color: Color) -> String
-where
-    T: AsRef<str>,
-{
+fn color_symbol(symbol: impl AsRef<str>, color: Color) -> String {
     format!("%F{{{}}}{}%f", color.ansi(), symbol.as_ref())
 }
 
-fn show_symbol_when_root<T>(symbol: T) -> String
-where
-    T: AsRef<str>,
-{
+fn show_symbol_when_root(symbol: impl AsRef<str>) -> String {
     format!("%(#.{}.)", symbol.as_ref())
 }
 
-fn show_symbols_for_exit_codes<T, W>(on_success_symbol: T, on_error_symbol: W) -> String
-where
-    T: AsRef<str>,
-    W: AsRef<str>,
-{
+fn show_symbols_for_exit_codes(
+    on_success_symbol: impl AsRef<str>,
+    on_error_symbol: impl AsRef<str>,
+) -> String {
     format!(
         "%(?.{}.{})",
         on_success_symbol.as_ref(),
@@ -71,9 +66,6 @@ where
     )
 }
 
-fn show_symbol_when_job<T>(symbol: T) -> String
-where
-    T: AsRef<str>,
-{
+fn show_symbol_when_job(symbol: impl AsRef<str>) -> String {
     format!("%(1j.{}.)", symbol.as_ref())
 }

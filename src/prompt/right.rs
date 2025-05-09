@@ -1,21 +1,18 @@
-use crate::{
-    command_line::stdout_write,
-    file_system::directory,
-    prompt::{self, Color},
-};
-use anyhow::Result;
-use num_format::{Locale, ToFormattedString as _};
 use std::io::{self, StdoutLock};
 
-fn write_entry_type_count<T>(
+use anyhow::Result;
+use num_format::{Locale, ToFormattedString as _};
+
+use crate::command_line::stdout_write;
+use crate::file_system::directory;
+use crate::prompt::{self, Color};
+
+fn write_entry_type_count(
     stdout: &mut StdoutLock,
-    symbol: T,
+    symbol: impl AsRef<str>,
     color: Option<Color>,
     count: directory::entry::TypeCount,
-) -> Result<()>
-where
-    T: AsRef<str>,
-{
+) -> Result<()> {
     if count == 0 {
         return Ok(());
     }
