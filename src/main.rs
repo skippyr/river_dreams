@@ -1,7 +1,3 @@
-#![deny(clippy::unwrap_used)]
-#![deny(clippy::expect_used)]
-#![deny(clippy::panic)]
-
 pub(crate) mod command_line;
 pub(crate) mod error;
 pub(crate) mod file_system;
