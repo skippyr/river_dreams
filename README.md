@@ -18,49 +18,54 @@ A tribal looking ZSH shell theme made to help you craft your most ambitious soft
 <p align="center">
   <img alt="" src="https://raw.githubusercontent.com/skippyr/river_dreams/refs/heads/master/assets/preview.png" width="1020" />
 </p>
-<p align="center"><strong>Caption:</strong> a preview of the River Dreams theme running in <a href="https://github.com/kovidgoyal/kitty">Kitty</a> on macOS. The palette used is <a href="https://github.com/skippyr/flamerial">Flamerial</a>, font is <a href="https://www.monolisa.dev">Monolisa</a> (with fallback to <a href="https://github.com/ryanoasis/nerd-fonts">Symbols Nerd Font</a>) and demo software is <a href="https://github.com/eza-community/eza">eza</a>. Custom background is not provided with the theme.</p>
+<p align="center"><strong>Caption:</strong> a preview of the River Dreams theme applied running <a href="https://github.com/eza-community/eza">eza</a> in <a href="https://github.com/kovidgoyal/kitty">Kitty</a> on macOS. The palette used is <a href="https://github.com/skippyr/flamerial">Flamerial</a> and font is <a href="https://www.monolisa.dev">Monolisa</a> (with fallback to <a href="https://github.com/ryanoasis/nerd-fonts">Symbols Nerd Font</a>). Background is AI art and provided as an wallpaper port by the <a href="https://github.com/skippyr/flamerial">Flamerial</a> palette.</p>
 
 ## ❡ Features
 The left prompt shows:
-<details>
-  <summary>Click to expand (...)</summary>
-  <ul>
-    <li>Your local IP address.</li>
-    <li>Your disk usage and its status.</li>
-    <li>Your battery charge and its status, if available.</li>
-    <li>A calendar showing the weekday, month and day of month.</li>
-    <li>A 24-hours clock showing the hours and minutes.</li>
-    <li>A decorator when you are the root user.</li>
-    <li>The exit code of the last command.</li>
-    <li>The active Python virtual environment, if one has been sourced.</li>
-    <li>The current directory path, abbreviated inside of Git repositories.</li>
-    <li>The active Git branch, when inside of Git repositories.</li>
-    <li>A decorator when you do not have permissions in the current directory.</li>
-  </ul>
-</details>
+
+<p>
+  <details>
+    <summary>Click to expand (...)</summary>
+    <ul>
+      <li>Your local IP address.</li>
+      <li>Your disk usage and its status.</li>
+      <li>Your battery charge and its status, if available.</li>
+      <li>A calendar showing the weekday, month and day of month.</li>
+      <li>A 24-hours clock showing the hours and minutes.</li>
+      <li>A decorator when you are the root user.</li>
+      <li>The exit code of the last command.</li>
+      <li>The active Python virtual environment, if one has been sourced.</li>
+      <li>The current directory path, abbreviated inside of Git repositories.</li>
+      <li>The active Git branch, when inside of Git repositories.</li>
+      <li>A decorator when you do not have permissions in the current directory.</li>
+    </ul>
+  </details>
+</p>
 
 The right prompt shows:
 
-<details>
-  <summary>Click to expand (...)</summary>
-  <ul>
-    <li>
-      The total number of each entry type in the current directory:
-      <ul>
-        <li>Files.</li>
-        <li>Directories.</li>
-        <li>Sockets.</li>
-        <li>Fifos.</li>
-        <li>Block devices.</li>
-        <li>Character devices.</li>
-        <li>Symlinks <em>(they are not followed)</em>.</li>
-        <li>Hidden entries.</li>
-        <li>Temporary entries.</li>
-      </ul>
-    </li>
-    <li>The total number of jobs running in the background.</li>
-  </ul>
-</details>
+<p>
+  <details>
+    <summary>Click to expand (...)</summary>
+    <ul>
+      <li>
+        The total number of each entry type in the current directory:
+        <ul>
+          <li>Files.</li>
+          <li>Directories.</li>
+          <li>Sockets.</li>
+          <li>Fifos.</li>
+          <li>Block devices.</li>
+          <li>Character devices.</li>
+          <li>Symlinks <em>(they are not followed)</em>.</li>
+          <li>Hidden entries.</li>
+          <li>Temporary entries.</li>
+        </ul>
+      </li>
+      <li>The total number of jobs running in the background.</li>
+    </ul>
+  </details>
+</p>
 
 ## ❡ Install
 ### Dependencies
