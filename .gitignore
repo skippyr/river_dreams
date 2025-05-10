@@ -1,7 +1,7 @@
 .DS_Store
 *.swp
-/.idea
-/.vs
-/.vscode
-/.zed
-/target
+/.idea/
+/.vs/
+/.vscode/
+/.zed/
+/target/
