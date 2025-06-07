@@ -5,7 +5,7 @@ version = "13.0.18"
 license = "BSD-3-Clause"
 edition = "2024"
 authors = ["Sherman Rofeman <skippyr.developer@icloud.com>"]
-homepage = "https://github.com/skippyr/river_dreams"
+repository = "https://github.com/skippyr/river_dreams"
 keywords = ["shell", "zsh", "cli", "shell-theme", "terminal"]
 categories = ["command-line-utilities", "development-tools"]
 
