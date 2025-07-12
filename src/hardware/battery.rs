@@ -3,7 +3,7 @@
 use anyhow::{Result, anyhow};
 use battery::units::ratio::ratio;
 
-/// The battery charge percentage.
+/// Represents the battery charge percentage.
 pub(crate) type ChargePercentage = u8;
 
 /// Contains the possible statuses for the battery charge.
