@@ -11,6 +11,11 @@
   &nbsp;
   <img alt="" src="https://img.shields.io/github/stars/skippyr/river_dreams?style=plastic&label=%E2%89%A5%20stars&labelColor=%2324130e&color=%23b8150d" />
 </p>
+<p align="center">
+  <span><a href="https://github.com/skippyr/river_dreams/blob/master/README.md">🇺🇸 English-US</a></span>
+  &ensp;
+  <span><a href="https://github.com/skippyr/river_dreams/blob/master/README_pt-BR.md">🇧🇷 Portuguese-BR</a></span>
+</p>
 
 ## ❡ About
 A tribal looking ZSH shell theme made to help you craft your most ambitious software projects. It is available for macOS and Linux.
@@ -70,7 +75,7 @@ The right prompt shows:
 ## ❡ Install
 ### Dependencies
 The following dependencies must be installed before it:
-- [**ZSH**](https://www.rust-lang.org): this is the shell the theme runs on. If you are on macOS, this is already the default one. On Linux, only a few distributions come with it by default, if that is not your case, you would need to change it manually.
+- ZSH: this is the shell the theme runs on. If you are on macOS, this is already the default one. On Linux, only a few distributions come with it by default, if that is not your case, you would need to change it manually.
 - [**Rust Toolchain**](https://www.rust-lang.org): it will be used to build the project from source.
 - **A font patched by the [Nerd Fonts project](https://www.nerdfonts.com/font-downloads):** it provides the pretty symbols used by the software. Alternatively, you can use the font containing just its symbols as a fallback to an unpatched one if your terminal supports. Avoid having multiple ones installed due to possible font conflicts.
 - **A terminal with good unicode support:** it will be used to run the shell. It is highly recommended to use [**Kitty**](https://github.com/kovidgoyal/kitty) due to its amazing features and traits required to render the fonts used in the theme.
