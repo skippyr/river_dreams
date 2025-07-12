@@ -12,7 +12,7 @@ use self::entry::UnixMetadata as _;
 /// Gets the current directory path.
 ///
 /// # Returns
-/// The current directory path or an error.
+/// On success, the current directory path.
 ///
 /// # Errors
 /// It returns a generic displayable error if the path cannot be resolved.

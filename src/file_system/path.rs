@@ -4,10 +4,10 @@ use std::path::Path;
 
 /// A trait applied to types to add path funcionalities.
 pub(crate) trait PathResolutions {
-    /// Checks whether the type refers to the file system root.
+    /// Checks whether the instance refers to the file system root.
     ///
     /// # Returns
-    /// A boolean that states the type refers to the file system root.
+    /// A boolean that states the instance refers to the file system root.
     fn is_root(&self) -> bool;
 }
 
