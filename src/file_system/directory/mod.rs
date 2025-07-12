@@ -1,3 +1,5 @@
+//! Provides features to check directory permissions and retrieve entries metadata.
+
 pub(crate) mod entry;
 
 use std::env;
@@ -7,6 +9,13 @@ use anyhow::{Result, anyhow};
 
 use self::entry::UnixMetadata as _;
 
+/// Gets the current directory path.
+///
+/// # Returns
+/// The current directory path or an error.
+///
+/// # Errors
+/// It returns a generic displayable error if the path cannot be resolved.
 pub(crate) fn current() -> Result<PathBuf> {
     env::current_dir().or_else(|_| {
         env::var("PWD")
@@ -17,10 +26,20 @@ pub(crate) fn current() -> Result<PathBuf> {
     })
 }
 
+/// Checks if the user owns the current directory, this is, has write permissions.
+///
+/// # Returns
+/// A boolean that states that.
 pub(crate) fn owns_current() -> bool {
     unsafe { libc::access(c".".as_ptr(), libc::W_OK) == 0 }
 }
 
+/// Gets a count containing the total of each entry type in the current directory.
+///
+/// If the directory cannot be opened, it returns a struct containing all fields assigned to zero.
+///
+/// # Returns
+/// The count.
 pub(crate) fn current_entry_type_counts() -> entry::TypeCounts {
     let mut type_counts = entry::TypeCounts::default();
     let stream = match unsafe { libc::opendir(c".".as_ptr()).as_ref() } {

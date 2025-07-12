@@ -1,3 +1,5 @@
+//! Provides features related to the right prompt rendering.
+
 use std::io::{self, StdoutLock};
 
 use anyhow::Result;
@@ -7,6 +9,22 @@ use crate::command_line::stdout_write;
 use crate::file_system::directory;
 use crate::prompt::{self, Color};
 
+/// Writes a single directory entry type count to the terminal output stream.
+///
+/// # Parameters
+/// - `stdout`: the mutex lock of the stream.
+/// - `symbol`: the symbol to be used to represent the type.
+/// - `color`: the color the symbol will have.
+/// - `count`: the count of the type.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns an empty error if it fails to write to the stream.
+///
+/// # Panics
+/// It panics with a "memory allocation failed" message if any string allocation fails.
 fn write_entry_type_count(
     stdout: &mut StdoutLock,
     symbol: impl AsRef<str>,
@@ -28,6 +46,21 @@ fn write_entry_type_count(
     )
 }
 
+/// Writes the prompt section that shows the total of each entry type in the current directory to
+/// the terminal output stream.
+///
+/// # Parameters
+/// - `stdout`: the mutex lock of the stream.
+/// - `type_counts`: the count to be considered.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns an empty error if it fails to write to the stream.
+///
+/// # Panics
+/// It panics with a "memory allocation failed" message if any string allocation fails.
 fn write_entry_type_counts_section(
     stdout: &mut StdoutLock,
     type_counts: &directory::entry::TypeCounts,
@@ -58,6 +91,11 @@ fn write_entry_type_counts_section(
     )
 }
 
+/// Writes the prompt section that displays the total of jobs running in the background to the
+/// terminal output stream.
+///
+/// # Parameters
+/// - `stdout`: the mutex lock of the
 fn write_jobs_section(stdout: &mut StdoutLock) -> Result<()> {
     stdout_write!(
         stdout,
@@ -70,6 +108,13 @@ fn write_jobs_section(stdout: &mut StdoutLock) -> Result<()> {
     )
 }
 
+/// Writes the right prompt to the terminal output stream.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns an empty error if it fails to write to the stream.
 pub(crate) fn write() -> Result<()> {
     let mut stdout = io::stdout().lock();
     write_entry_type_counts_section(&mut stdout, &directory::current_entry_type_counts())?;

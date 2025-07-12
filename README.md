@@ -12,10 +12,15 @@
   <img alt="" src="https://img.shields.io/github/stars/skippyr/river_dreams?style=plastic&label=%E2%89%A5%20stars&labelColor=%2324130e&color=%23b8150d" />
 </p>
 <p align="center">
+  <img alt="" src="https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=F0F0F0" />
+  <img alt="" src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black" />
+</p>
+<p align="center">
   <span><a href="https://github.com/skippyr/river_dreams/blob/master/README.md">🇺🇸 English-US</a></span>
   &ensp;
   <span><a href="https://github.com/skippyr/river_dreams/blob/master/README_pt-BR.md">🇧🇷 Portuguese-BR</a></span>
 </p>
+<p align="center"><sup>Since February 2023</sup></p>
 
 ## ❡ About
 A tribal looking ZSH shell theme made to help you craft your most ambitious software projects. It is available for macOS and Linux.
@@ -41,8 +46,8 @@ The left prompt shows:
       <li>The exit code of the last command.</li>
       <li>The active Python virtual environment, if one has been sourced.</li>
       <li>The current directory path, abbreviated inside of Git repositories.</li>
-      <li>The active Git branch, when inside of Git repositories.</li>
-      <li>A decorator when you do not have permissions in the current directory.</li>
+      <li>The active Git branch and a decorator when it is dirty, when inside of Git repositories.</li>
+      <li>A decorator when you do not own the current directory.</li>
     </ul>
   </details>
 </p>

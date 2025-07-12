@@ -1,3 +1,5 @@
+//! Provides features related to the left prompt rendering.
+
 use std::env;
 use std::io::{self, StdoutLock};
 use std::net::IpAddr;
@@ -12,11 +14,27 @@ use crate::file_system::directory;
 use crate::file_system::path::PathResolutions as _;
 use crate::hardware::{battery, disk};
 use crate::prompt::{self, Color, ZSH_EXIT_CODE, ZSH_PERCENTAGE_SYMBOL};
-use crate::time::{DateTimeResolutions as _, DayFraction};
+use crate::datetime::{DateTimeResolutions as _, DayFraction};
 use crate::{format, git};
 
+/// The length of the prompt that is composed by constant section areas.
 const SECTIONS_CONSTANT_LENGTH: prompt::Size = 42;
 
+/// Writes the prompt separator composed by the first tribal symbol set seen at its top to the
+/// terminal output stream.
+///
+/// # Parameters
+/// - `stdout`: the mutex lock of the stream.
+/// - `terminal_width`: the terminal width to be considered.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns a displayable error if it fails to write to the stream.
+///
+/// # Panics
+/// It panics with a "memory allocation failed" message if any string allocation fails.
 fn write_top_separator(stdout: &mut StdoutLock, terminal_width: prompt::Size) -> Result<()> {
     for column in 0..terminal_width {
         stdout_write!(
@@ -32,6 +50,23 @@ fn write_top_separator(stdout: &mut StdoutLock, terminal_width: prompt::Size) ->
     stdout_write!(stdout, "{}", prompt::color_symbol(":«(", Color::Yellow))
 }
 
+/// Writes the prompt section that shows the primary local IP address of the machine to the terminal
+/// output stream.
+///
+/// # Parameters
+/// - `stdout`: the mutex lock of the stream.
+/// - `ip`: the possible IP to be considered. If `None`, the function will not do anything.
+/// - `sections_length`: a reference to the current prompt length. It gets incremented by this
+/// section length upon a complete execution.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns a displayable error if it fails to write to the stream.
+///
+/// # Panics
+/// It panics with a "memory allocation failed" message if any string allocation fails.
 fn write_local_ip_section(
     stdout: &mut StdoutLock,
     ip: Option<IpAddr>,
@@ -45,6 +80,22 @@ fn write_local_ip_section(
     Ok(())
 }
 
+/// Writes the prompt section that shows the disk usage and its status to the terminal output stream.
+///
+/// # Parameters
+/// - `stdout`: the mutex lock of the stream.
+/// - `usage`: the usage to be considered.
+/// - `sections_length`: a reference to the current prompt length. It gets incremented by this
+/// section length upon a complete execution.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns an empty error if it fails to write to the stream.
+///
+/// # Panics
+/// It panics with a "memory allocation failed" message if any string allocation fails.
 fn write_disk_section(
     stdout: &mut StdoutLock,
     usage: disk::Usage,
@@ -68,6 +119,23 @@ fn write_disk_section(
     Ok(())
 }
 
+/// Writes the prompt section that shows the battery charge and its status to the terminal output
+/// stream.
+///
+/// # Parameters
+/// - `stdout`: the mutex lock of the stream.
+/// - `charge`: the possible charge to be considered. If `None`, the function will not do anything.
+/// - `sections_length`: a reference to the current prompt length. It gets incremented by this
+/// section length upon a complete execution.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns an empty error if it fails to write to the stream.
+///
+/// # Panics
+/// It panics with a "memory allocation failed" message if any string allocation fails.
 fn write_battery_section(
     stdout: &mut StdoutLock,
     charge: Option<battery::Charge>,
@@ -97,30 +165,76 @@ fn write_battery_section(
     Ok(())
 }
 
-fn write_calendar_section(stdout: &mut StdoutLock, current_time: DateTime<Local>) -> Result<()> {
+/// Writes the prompt section that shows a calendar with the weekday, month and day of month to the
+/// terminal output stream.
+///
+/// # Parameters
+/// - `stdout`: the mutex lock of the stream.
+/// - `current_date_time`: the current time to be considered.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns an empty error if it fails to write to the stream.
+///
+/// # Panics
+/// It panics with a "memory allocation failed" message if any string allocation fails.
+fn write_calendar_section(stdout: &mut StdoutLock, current_date_time: DateTime<Local>) -> Result<()> {
     stdout_write!(
         stdout,
         "  {}{}{}",
         prompt::color_symbol("󰃭 ", Color::Red),
-        current_time.format("(%a) %b %d"),
-        current_time.day_ordinal(),
+        current_date_time.format("(%a) %b %d"),
+        current_date_time.day_ordinal(),
     )
 }
 
-fn write_clock_section(stdout: &mut StdoutLock, current_time: DateTime<Local>) -> Result<()> {
+/// Writes the prompt section that shows a 24-hours clock with the hours and minutes to the terminal
+/// output stream.
+///
+/// # Parameters
+/// - `stdout`: the mutex lock of the stream.
+/// - `current_date_time`: the current time to be considered.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns an empty error if it fails to write to the stream.
+///
+/// # Panics
+/// It panics with a "memory allocation failed" message if any string allocation fails.
+fn write_clock_section(stdout: &mut StdoutLock, current_date_time: DateTime<Local>) -> Result<()> {
     stdout_write!(
         stdout,
         "  {}{}",
-        match current_time.day_fraction() {
+        match current_date_time.day_fraction() {
             DayFraction::Dawn => prompt::color_symbol("󰭎 ", Color::Cyan),
             DayFraction::Morning => prompt::color_symbol("󰖨 ", Color::Red),
             DayFraction::Afternoon => prompt::color_symbol(" ", Color::Blue),
             DayFraction::Night => prompt::color_symbol("󰽥 ", Color::Yellow),
         },
-        current_time.format("%Hh%Mm")
+        current_date_time.format("%Hh%Mm")
     )
 }
 
+/// Writes the prompt separator used to fill the space between the second and third section lines
+/// composed by the second tribal symbol set seen at its top to the terminal output stream.
+///
+/// # Parameters
+/// - `stdout`: the mutex lock of the stream.
+/// - `terminal_width`: the terminal width to be considered.
+/// - `sections_length`: a reference to the current prompt length.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns an empty error if it fails to write to the stream.
+///
+/// # Panics
+/// It panics with a "memory allocation failed" message if any string allocation fails.
 fn write_middle_separator(
     stdout: &mut StdoutLock,
     terminal_width: prompt::Size,
@@ -141,6 +255,20 @@ fn write_middle_separator(
     Ok(())
 }
 
+/// Writes the prompt section that shows a decorator when user is `root` to the terminal output
+/// stream.
+///
+/// # Parameters
+/// - `stdout`: the mutex lock of the stream.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns an empty error if it fails to write to the stream.
+///
+/// # Panics
+/// It panics with a "memory allocation failed" message if any string allocation fails.
 fn write_user_permissions_section(stdout: &mut StdoutLock) -> Result<()> {
     stdout_write!(
         stdout,
@@ -154,6 +282,20 @@ fn write_user_permissions_section(stdout: &mut StdoutLock) -> Result<()> {
     )
 }
 
+/// Writes the prompt section that shows different decorators for success and error exit codes to
+/// the terminal output stream.
+///
+/// # Parameters
+/// - `stdout`: the mutex lock of the stream.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns an empty error if it fails to write to the stream.
+///
+/// # Panics
+/// It panics with a "memory allocation failed" message if any string allocation fails.
 fn write_exit_code_section(stdout: &mut StdoutLock) -> Result<()> {
     stdout_write!(
         stdout,
@@ -167,6 +309,20 @@ fn write_exit_code_section(stdout: &mut StdoutLock) -> Result<()> {
     )
 }
 
+/// Writes the prompt section that shows the active Python virtual environment name to the terminal
+/// output stream.
+///
+/// # Parameters
+/// - `stdout`: the mutex lock of the stream.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns an empty error if it fails to write to the stream.
+///
+/// # Panics
+/// It panics with a "memory allocation failed" message if any string allocation fails.
 fn write_virtual_env_section(stdout: &mut StdoutLock) -> Result<()> {
     let virtual_env = match env::var("VIRTUAL_ENV") {
         Ok(variable) => variable,
@@ -182,6 +338,23 @@ fn write_virtual_env_section(stdout: &mut StdoutLock) -> Result<()> {
     )
 }
 
+/// Writes the prompt section that shows the current directory path to the terminal output stream.
+/// It gets abbreviated inside of Git repositories and uses the `~` (for the home directory) and `@`
+/// (for Git repository directories) prefixes.
+///
+/// # Parameters
+/// - `stdout`: the mutex lock of the stream.
+/// - `current_directory`: the current directory path to be considered.
+/// - `repository`: the possible Git repository to be considered.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns an empty error if it fails to write to the stream.
+///
+/// # Panics
+/// It panics with a "memory allocation failed" message if any string allocation fails.
 fn write_path_section(
     stdout: &mut StdoutLock,
     current_directory: impl AsRef<Path>,
@@ -215,6 +388,21 @@ fn write_path_section(
     )
 }
 
+/// Writes the prompt section that shows the active branch name and a decorator when it is dirty to
+/// the terminal output stream.
+///
+/// # Parameters
+/// - `stdout`: the mutex lock of the stream.
+/// - `repository`: the Git repository to be considered.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns an empty error if it fails to write to the stream.
+///
+/// # Panics
+/// It panics with a "memory allocation failed" message if any string allocation fails.
 fn write_git_section(stdout: &mut StdoutLock, repository: Option<&git::Repository>) -> Result<()> {
     let repository = match repository {
         Some(repository) => repository,
@@ -243,6 +431,20 @@ fn write_git_section(stdout: &mut StdoutLock, repository: Option<&git::Repositor
     Ok(())
 }
 
+/// Writes the prompt section that shows a decorator when the user does not owns the current
+/// repository, that is, it does not have write permissions, to the terminal output stream.
+///
+/// # Parameters
+/// - `stdout`: the mutex lock of the stream.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns an empty error if it fails to write to the stream.
+///
+/// # Panics
+/// It panics with a "memory allocation failed" message if any string allocation fails.
 fn write_directory_ownership_section(stdout: &mut StdoutLock) -> Result<()> {
     if !directory::owns_current() {
         stdout_write!(stdout, " {}", prompt::color_symbol("", Color::Cyan))?;
@@ -250,13 +452,27 @@ fn write_directory_ownership_section(stdout: &mut StdoutLock) -> Result<()> {
     Ok(())
 }
 
+/// Writes the left prompt to the terminal output stream.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns an empty error if it fails to:
+/// - Write to the stream.
+/// - Retrieve the terminal window dimensions.
+/// - Retrieve the battery charge metadata.
+/// - Retrieve the current directory path.
+///
+/// # Panics
+/// It panics with a "memory allocation failed" message if any string allocation fails.
 pub(crate) fn write() -> Result<()> {
     let terminal_width = terminal::size()
         .map(|(width, _)| width)
         .map_err(|_| anyhow!("can not retrieve the terminal dimensions."))?;
     let disk_usage = disk::usage()?;
     let battery_charge = battery::charge()?;
-    let current_time = Local::now();
+    let current_date_time = Local::now();
     let git_repository = git::find_repository();
     let current_directory = directory::current()?;
     let mut sections_length = SECTIONS_CONSTANT_LENGTH;
@@ -269,8 +485,8 @@ pub(crate) fn write() -> Result<()> {
     )?;
     write_disk_section(&mut stdout, disk_usage, &mut sections_length)?;
     write_battery_section(&mut stdout, battery_charge, &mut sections_length)?;
-    write_calendar_section(&mut stdout, current_time)?;
-    write_clock_section(&mut stdout, current_time)?;
+    write_calendar_section(&mut stdout, current_date_time)?;
+    write_clock_section(&mut stdout, current_date_time)?;
     write_middle_separator(&mut stdout, terminal_width, sections_length)?;
     write_user_permissions_section(&mut stdout)?;
     write_exit_code_section(&mut stdout)?;

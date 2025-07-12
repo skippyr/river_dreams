@@ -1,21 +1,36 @@
+//! Provides features to retrieve Git repositories metadata.
+
 use std::fs;
 use std::path::PathBuf;
 
+/// The default branch name used by Git.
 const DEFAULT_BRANCH_NAME: &str = "master";
 
+/// Contains the possible references types used by Git to identify the state of a repository.
 #[derive(Debug, Clone)]
 pub(crate) enum Reference {
+    /// A branch name.
     Branch(String),
+    /// A hash describing a rebase operation.
     RebaseHash(String),
 }
 
+/// Contains the metadata of a Git repository.
 #[derive(Debug, Clone)]
 pub(crate) struct Repository {
+    /// The full path to the repository.
     pub(crate) path: PathBuf,
+    /// The type of reference being used to represent its current state.
     pub(crate) reference: Reference,
+    /// A boolean that states it is dirty, this is, it contains uncommited changes.
     pub(crate) is_dirty: bool,
 }
 
+/// Finds the metadata of a possibly active Git repository by searching recursively from the current
+/// directory.
+///
+/// # Returns
+/// The possible repository fimd.
 pub(crate) fn find_repository() -> Option<Repository> {
     let repository = git2::Repository::discover(".").ok()?;
     let reference = repository

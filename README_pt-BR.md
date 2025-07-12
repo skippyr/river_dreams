@@ -12,10 +12,15 @@
   <img alt="" src="https://img.shields.io/github/stars/skippyr/river_dreams?style=plastic&label=%E2%89%A5%20estrelas&labelColor=%2324130e&color=%23b8150d" />
 </p>
 <p align="center">
+  <img alt="" src="https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=F0F0F0" />
+  <img alt="" src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black" />
+</p>
+<p align="center">
   <span><a href="https://github.com/skippyr/river_dreams/blob/master/README.md">🇺🇸 English-US</a></span>
   &ensp;
   <span><a href="https://github.com/skippyr/river_dreams/blob/master/README_pt-BR.md">🇧🇷 Portuguese-BR</a></span>
 </p>
+<p align="center"><sup>Desde Fevereiro de 2023</sup></p>
 
 ## ❡ Sobre
 Um tema de aparência tribal para o shell ZSH confeccionado para ajudar você a dar vida a seus projetos de software mais ambiciosos. Ele está disponível para macOS e Linux.
@@ -41,8 +46,8 @@ O prompt esquerdo mostra:
       <li>O código de retorno do último comando.</li>
       <li>O nome do ambiente virtual Python ativo, se um foi selecionado.</li>
       <li>O caminho do diretório atual, abreviado quando dentro de repositórios Git.</li>
-      <li>O nome da branch Git ativa, quando dentro de repositórios Git.</li>
-      <li>Um indicador quando você não tem permissões no diretório atual.</li>
+      <li>O nome da branch Git ativa e um indicador quando estiver dirty, quando dentro de repositórios Git.</li>
+      <li>Um indicador quando você não tem posse do diretório atual.</li>
     </ul>
   </details>
 </p>

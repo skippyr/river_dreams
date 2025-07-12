@@ -1,3 +1,6 @@
+//! A tribal looking ZSH shell theme made to help you craft your most ambitious software projects.
+//! It is available for macOS and Linux.
+
 pub(crate) mod command_line;
 pub(crate) mod error;
 pub(crate) mod file_system;
@@ -6,7 +9,7 @@ pub(crate) mod git;
 pub(crate) mod hardware;
 pub(crate) mod metadata;
 pub(crate) mod prompt;
-pub(crate) mod time;
+pub(crate) mod datetime;
 
 use std::env;
 use std::process::ExitCode;
@@ -15,6 +18,7 @@ use anyhow::anyhow;
 
 use crate::command_line::{ArgumentParsing as _, Command};
 
+/// The entry point of the application.
 fn main() -> ExitCode {
     let arguments = env::args().skip(1).collect::<Vec<_>>();
     let mut command = None;
@@ -31,7 +35,7 @@ fn main() -> ExitCode {
     for argument in &arguments {
         if argument == "-h" || argument == "--help" {
             return match match command {
-                None => metadata::write_software_help(),
+                None => metadata::write_main_help(),
                 Some(Command::Prompt) => metadata::write_prompt_command_help(),
                 Some(Command::Init) => metadata::write_init_command_help(),
             } {

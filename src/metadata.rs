@@ -1,3 +1,5 @@
+//! Provides features to hold and display the application metadata.
+
 use std::io;
 
 use anyhow::{Result, anyhow};
@@ -5,6 +7,7 @@ use crossterm::style::Stylize as _;
 
 use crate::command_line::stdout_write;
 
+/// The application metadata.
 pub(crate) static APP_METADATA: AppMetadata = AppMetadata {
     name: env!("CARGO_PKG_NAME"),
     version: concat!("v", env!("CARGO_PKG_VERSION")),
@@ -19,45 +22,76 @@ pub(crate) static APP_METADATA: AppMetadata = AppMetadata {
         email: Email("skippyr.developer@icloud.com"),
     },
 };
+/// The name of the running operating system.
 #[cfg(target_os = "macos")]
 pub(crate) static OS: &str = "macOS";
+/// The name of the running operating system.
 #[cfg(target_os = "linux")]
 pub(crate) static OS: &str = "Linux";
 
+/// Represents a year.
 pub(crate) type Year = u16;
 
+/// Represents the metadata of the application.
 #[derive(Debug, Clone, Copy)]
 pub(crate) struct AppMetadata {
+    /// The name of the application.
     pub(crate) name: &'static str,
+    /// The version of the application.
     pub(crate) version: &'static str,
+    /// The year the application has been created.
     pub(crate) creation_year: Year,
+    /// The URL of the application repository.
     pub(crate) repository_url: &'static str,
+    /// The license the application is distributed with.
     pub(crate) license: License,
+    /// The name of the application developer.
     pub(crate) developer: Developer,
 }
 
+/// Represents a software license.
 #[derive(Debug, Clone, Copy)]
 pub(crate) struct License {
+    /// The name of the license.
     pub(crate) name: &'static str,
+    /// The text of the license.
     pub(crate) text: &'static str,
 }
 
+/// Represents the application developer.
 #[derive(Debug, Clone, Copy)]
 pub(crate) struct Developer {
+    /// The name of the developer.
     pub(crate) name: &'static str,
+    /// The e-mail of the developer.
     pub(crate) email: Email,
 }
 
+/// Represents an e-mail.
 #[derive(Debug, Clone, Copy)]
-pub(crate) struct Email(pub(crate) &'static str);
+pub(crate) struct Email(
+    /// The address of the e-mail, e.g: "john.doe@email.com".
+    pub(crate) &'static str);
 
 impl Email {
+    /// Allocates a string on the heap wrapping the e-mail into an URL format that can be opened in
+    /// the default mail client.
+    ///
+    /// # Returns
+    /// The string allocated.
     pub(crate) fn as_url(&self) -> String {
         format!("mailto:{}", self.0)
     }
 }
 
-pub(crate) fn write_software_help() -> Result<()> {
+/// Writes the main application help to the terminal output stream.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns a displayable error if it cannot write to the stream.
+pub(crate) fn write_main_help() -> Result<()> {
     let mut stdout = io::stdout().lock();
     stdout_write!(
         &mut stdout,
@@ -104,6 +138,13 @@ Performs actions related to the River Dreams theme.
     )
 }
 
+/// Writes the application prompt command help.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns a displayable error if it cannot write to the stream.
 pub(crate) fn write_prompt_command_help() -> Result<()> {
     let mut stdout = io::stdout().lock();
     stdout_write!(
@@ -143,6 +184,13 @@ For more information, use:
     )
 }
 
+/// Writes the application init command help to the terminal output stream.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns a displayable error if it cannot write to the stream.
 pub(crate) fn write_init_command_help() -> Result<()> {
     let mut stdout = io::stdout().lock();
     stdout_write!(
@@ -172,6 +220,13 @@ to your ~/.zshrc configuration file.
     )
 }
 
+/// Writes the application name, its version and running OS to the terminal output stream.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns a displayable error if it cannot write to the stream.
 pub(crate) fn write_version() -> Result<()> {
     let mut stdout = io::stdout().lock();
     stdout_write!(
@@ -193,11 +248,25 @@ Copyright © {} {} <{}>.
     )
 }
 
+/// Writes the application license to the terminal output stream.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns a displayable error if it cannot write to the stream.
 pub(crate) fn write_license() -> Result<()> {
     let mut stdout = io::stdout().lock();
     stdout_write!(&mut stdout, "{}\n", APP_METADATA.license.text)
 }
 
+/// Opens the application repository in the default web browser.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns a displayable error if the browser cannot be opened.
 pub(crate) fn open_repository() -> Result<()> {
     let mut stdout = io::stdout().lock();
     open::that(APP_METADATA.repository_url)
@@ -208,10 +277,17 @@ pub(crate) fn open_repository() -> Result<()> {
     )
 }
 
+/// Opens the default mail client drafting a message to the application developer.
+///
+/// # Returns
+/// A possible error.
+///
+/// # Errors
+/// It returns a displayable error if the client cannot be opened.
 pub(crate) fn draft_email_to_developer() -> Result<()> {
     let mut stdout = io::stdout().lock();
     open::that(APP_METADATA.developer.email.as_url())
-        .map_err(|_| anyhow!("can not draft e-mail to developer in the default e-mail client."))?;
+        .map_err(|_| anyhow!("cannot draft e-mail to developer in the default e-mail client."))?;
     stdout_write!(
         &mut stdout,
         "Drafting e-mail to developer in the default e-mail client.\n"
