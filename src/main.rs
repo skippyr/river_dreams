@@ -1,3 +1,6 @@
+//! A tribal looking ZSH shell theme made to help you craft your most ambitious software projects.
+//! It is available for macOS and Linux.
+
 pub(crate) mod command_line;
 pub(crate) mod error;
 pub(crate) mod file_system;

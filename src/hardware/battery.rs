@@ -9,13 +9,15 @@ pub(crate) type ChargePercentage = u8;
 /// Contains the possible statuses for the battery charge.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) enum ChargeStatus {
-    /// The charge is at a critical level, and the computer will sleep soon.
+    /// The charge is at a critical level (0% to 5%), and the computer will sleep soon.
     Critical,
-    /// The charge is at a low level, and should be charged.
+    /// The charge is at a low level (5% to 30%), and should be charged.
     Low,
-    /// The charge is at a moderate level, not requiring charging.
+    /// The charge is at a moderate level (30% to 60%), and charging will be
+    /// required in the future.
     Moderate,
-    /// The charge is at its full capacity, and can be unplugged.
+    /// The charge is at a high level (60% to 100%), and can be unplugged for
+    /// outside usage.
     High,
 }
 
@@ -53,7 +55,7 @@ impl Charge {
 /// battery is available.
 ///
 /// # Errors
-/// It returns a generic displayable error, if querying the battery metadata fails.
+/// It returns a generic displayable error if querying the battery metadata fails.
 pub(crate) fn charge() -> Result<Option<Charge>> {
     const SUPPLY_ERROR: &str = "can not retrieve info about the energy supply of the computer.";
     for battery in battery::Manager::new()
