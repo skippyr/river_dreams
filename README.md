@@ -1,19 +1,19 @@
 <p align="center">
-  <img alt="" src="https://raw.githubusercontent.com/skippyr/river_dreams/refs/heads/master/assets/ornament.png" width="1020" />
+  <img alt="A tribal ornament made out of a triangle pattern" src="https://raw.githubusercontent.com/skippyr/river_dreams/refs/heads/master/assets/ornament.png" width="1020" />
 </p>
 <h1 align="center">≥v≥v&ensp;River Dreams&ensp;≥v≥v</h1>
 <p align="center">
-  <img alt="" src="https://img.shields.io/github/license/skippyr/river_dreams?style=plastic&label=%E2%89%A5%20license&labelColor=%2324130e&color=%23b8150d" />
+  <img alt="A badge containing the license the repository is under" src="https://img.shields.io/github/license/skippyr/river_dreams?style=plastic&label=%E2%89%A5%20license&labelColor=%2324130e&color=%23b8150d" />
   &nbsp;
-  <img alt="" src="https://img.shields.io/github/v/tag/skippyr/river_dreams?style=plastic&label=%E2%89%A5%20tag&labelColor=%2324130e&color=%23b8150d" />
+  <img alt="A badge containing the latest tag from the repository" src="https://img.shields.io/github/v/tag/skippyr/river_dreams?style=plastic&label=%E2%89%A5%20tag&labelColor=%2324130e&color=%23b8150d" />
   &nbsp;
-  <img alt="" src="https://img.shields.io/github/commit-activity/t/skippyr/river_dreams?style=plastic&label=%E2%89%A5%20commits&labelColor=%2324130e&color=%23b8150d" />
+  <img alt="A badge containing the total number of commits in the repository" src="https://img.shields.io/github/commit-activity/t/skippyr/river_dreams?style=plastic&label=%E2%89%A5%20commits&labelColor=%2324130e&color=%23b8150d" />
   &nbsp;
-  <img alt="" src="https://img.shields.io/github/stars/skippyr/river_dreams?style=plastic&label=%E2%89%A5%20stars&labelColor=%2324130e&color=%23b8150d" />
+  <img alt="A badge containing the total number of stars in the repository" src="https://img.shields.io/github/stars/skippyr/river_dreams?style=plastic&label=%E2%89%A5%20stars&labelColor=%2324130e&color=%23b8150d" />
 </p>
 <p align="center">
-  <img alt="" src="https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=F0F0F0" />
-  <img alt="" src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black" />
+  <img alt="A badge containing the macOS logo" src="https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=F0F0F0" />
+  <img alt="A badge containing the Linux logo" src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black" />
 </p>
 <p align="center">
   <span><a href="https://github.com/skippyr/river_dreams/blob/master/README.md">🇺🇸 English-US</a></span>
