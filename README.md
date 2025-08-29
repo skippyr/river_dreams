@@ -15,11 +15,6 @@
   <img alt="A badge containing the macOS logo" src="https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=F0F0F0" />
   <img alt="A badge containing the Linux logo" src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black" />
 </p>
-<p align="center">
-  <span><a href="https://github.com/skippyr/river_dreams/blob/master/README.md">🇺🇸 English-US</a></span>
-  &ensp;
-  <span><a href="https://github.com/skippyr/river_dreams/blob/master/README_pt-BR.md">🇧🇷 Portuguese-BR</a></span>
-</p>
 <p align="center"><sup>Since February 2023</sup></p>
 
 ## ❡ About

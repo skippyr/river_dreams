@@ -729,7 +729,7 @@ dependencies = [
 
 [[package]]
 name = "river_dreams"
-version = "13.0.21"
+version = "13.0.22"
 dependencies = [
  "anyhow",
  "battery",
